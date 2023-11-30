@@ -18,6 +18,7 @@
 		A7162E9E2B18229000CFCE84 /* TencentEffectSampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7162E9D2B18229000CFCE84 /* TencentEffectSampleTests.swift */; };
 		A7162EA82B18229000CFCE84 /* TencentEffectSampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7162EA72B18229000CFCE84 /* TencentEffectSampleUITests.swift */; };
 		A7162EAA2B18229000CFCE84 /* TencentEffectSampleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7162EA92B18229000CFCE84 /* TencentEffectSampleUITestsLaunchTests.swift */; };
+		A7162EF62B18579600CFCE84 /* XmagicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7162EF52B18579600CFCE84 /* XmagicManager.swift */; };
 		C7EC5545FB6F28B7CAA67D26 /* Pods_TencentEffectSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E698FF579ED72BD0B91324 /* Pods_TencentEffectSample.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		A7162EA32B18229000CFCE84 /* TencentEffectSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TencentEffectSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7162EA72B18229000CFCE84 /* TencentEffectSampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TencentEffectSampleUITests.swift; sourceTree = "<group>"; };
 		A7162EA92B18229000CFCE84 /* TencentEffectSampleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TencentEffectSampleUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A7162EF52B18579600CFCE84 /* XmagicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XmagicManager.swift; sourceTree = "<group>"; };
 		BCA660BAE717531BE99EB94F /* Pods-TencentEffectSample-TencentEffectSampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TencentEffectSample-TencentEffectSampleUITests.debug.xcconfig"; path = "Target Support Files/Pods-TencentEffectSample-TencentEffectSampleUITests/Pods-TencentEffectSample-TencentEffectSampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C22BCF774A3568A662BE3B12 /* Pods-TencentEffectSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TencentEffectSample.release.xcconfig"; path = "Target Support Files/Pods-TencentEffectSample/Pods-TencentEffectSample.release.xcconfig"; sourceTree = "<group>"; };
 		CFA95B6E8665E1AB77C1F23D /* Pods-TencentEffectSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TencentEffectSample.debug.xcconfig"; path = "Target Support Files/Pods-TencentEffectSample/Pods-TencentEffectSample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				A7162E8F2B18229000CFCE84 /* Assets.xcassets */,
 				A7162E912B18229000CFCE84 /* LaunchScreen.storyboard */,
 				A7162E942B18229000CFCE84 /* Info.plist */,
+				A7162EF52B18579600CFCE84 /* XmagicManager.swift */,
 			);
 			path = TencentEffectSample;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 			files = (
 				A7162E8B2B18228E00CFCE84 /* ViewController.swift in Sources */,
 				A7162E872B18228E00CFCE84 /* AppDelegate.swift in Sources */,
+				A7162EF62B18579600CFCE84 /* XmagicManager.swift in Sources */,
 				A7162E892B18228E00CFCE84 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,6 +12,7 @@ import AgoraRtcKit
 
 class ViewController: UIViewController {
     
+
     // The main entry point for Video SDK
     var agoraEngine: AgoraRtcEngineKit!
     // By default, set the current user role to broadcaster to both send and receive streams.
@@ -24,6 +25,9 @@ class ViewController: UIViewController {
     // Update with the channel name you used to generate the token in Agora Console.
     var channelName = "sample"
 
+    var videoFilter: XmagicManager!
+
+    
     
     // The video feed for the local user is displayed here
     var localView: UIView!
@@ -104,6 +108,10 @@ class ViewController: UIViewController {
     func setupLocalVideo() {
         // Enable the video module
         agoraEngine.enableVideo()
+        agoraEngine.setVideoFrameDelegate(self)
+        self.videoFilter = XmagicManager()
+        
+        
         // Start the local video preview
         agoraEngine.startPreview()
         let videoCanvas = AgoraRtcVideoCanvas()
@@ -192,5 +200,37 @@ extension ViewController: AgoraRtcEngineDelegate {
         videoCanvas.renderMode = .hidden
         videoCanvas.view = remoteView
         agoraEngine.setupRemoteVideo(videoCanvas)
+    }
+}
+
+extension ViewController: AgoraVideoFrameDelegate {
+
+    func onCapture(_ videoFrame: AgoraOutputVideoFrame, sourceType: AgoraVideoSourceType) -> Bool {
+        //<#code#>
+        return true
+    }
+
+    // Occurs each time the SDK receives a video frame sent by the remote user
+    func onRenderVideoFrame(_ videoFrame: AgoraOutputVideoFrame, uid: UInt, channelId: String) -> Bool {
+        // Choose whether to ignore the current video frame if the post-processing fails
+        return false
+    }
+
+    // Indicate the video frame mode of the observer
+    func getVideoFrameProcessMode() -> AgoraVideoFrameProcessMode {
+        // The process mode of the video frame: readOnly, readWrite
+        return AgoraVideoFrameProcessMode.readWrite
+    }
+
+    // Sets the video frame type preference
+    func getVideoFormatPreference() -> AgoraVideoFormat {
+        // Video frame format: I420, BGRA, NV21, RGBA, NV12, CVPixel, I422, Default
+        return AgoraVideoFormat.I420
+    }
+
+    // Sets the frame position for the video observer
+    func getObservedFramePosition() -> AgoraVideoFramePosition {
+        // Frame position: postCapture, preRenderer, preEncoder
+        return AgoraVideoFramePosition.postCapture
     }
 }
