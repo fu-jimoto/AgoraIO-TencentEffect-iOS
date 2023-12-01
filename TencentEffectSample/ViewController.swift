@@ -11,18 +11,13 @@ import AgoraRtcKit
 
 
 class ViewController: UIViewController {
-    
 
-    // The main entry point for Video SDK
-    var agoraEngine: AgoraRtcEngineKit!
-    // By default, set the current user role to broadcaster to both send and receive streams.
-    var userRole: AgoraClientRole = .broadcaster
-
-    // Update with the App ID of your project generated on Agora Console.
     let appID = ""
-    // Update with the temporary token generated in Agora Console.
+    let xMagicLicenceUrl = ""
+    let xMagicLicenceKey = ""
+    var agoraEngine: AgoraRtcEngineKit!
+    var userRole: AgoraClientRole = .broadcaster
     var token = ""
-    // Update with the channel name you used to generate the token in Agora Console.
     var channelName = "sample"
 
     var videoFilter: XmagicManager!
@@ -47,8 +42,11 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.videoFilter = XmagicManager()
+        self.videoFilter.auth(url: xMagicLicenceUrl, key: xMagicLicenceKey)
+        
         initViews()
-        // The following functions are used when calling Agora APIs
         initializeAgoraEngine()
     }
     
@@ -109,9 +107,7 @@ class ViewController: UIViewController {
         // Enable the video module
         agoraEngine.enableVideo()
         agoraEngine.setVideoFrameDelegate(self)
-        self.videoFilter = XmagicManager()
-        
-        
+                
         // Start the local video preview
         agoraEngine.startPreview()
         let videoCanvas = AgoraRtcVideoCanvas()
@@ -120,6 +116,11 @@ class ViewController: UIViewController {
         videoCanvas.view = localView
         // Set the local video view
         agoraEngine.setupLocalVideo(videoCanvas)
+
+        self.videoFilter.buildBeautySDK(renderSize: CGSize(width: 350, height: 330))
+        self.videoFilter.configProperty(type: "beauty", name: "beauty.enlarge.eye", data: "100", extraInfo: nil)
+
+
     }
 
     func initViews() {
@@ -207,6 +208,7 @@ extension ViewController: AgoraVideoFrameDelegate {
 
     func onCapture(_ videoFrame: AgoraOutputVideoFrame, sourceType: AgoraVideoSourceType) -> Bool {
         //<#code#>
+        //videoFrame.pixelBuffer
         return true
     }
 

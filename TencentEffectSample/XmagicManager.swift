@@ -7,6 +7,8 @@
 
 import UIKit
 import XMagic
+import YTCommonXMagic
+
 class XmagicManager {
     
     private var beautyKit: XMagic?
@@ -22,9 +24,17 @@ class XmagicManager {
         self.beautyKit?.deinit()
     }
     
-//    func configProperty(type propertyType: String, name propertyName: String, data propertyValue: String, extraInfo: Any?) -> Int {
-//        return self.beautyKit?.configProperty(withType: propertyType, withName: propertyName, withData: propertyValue, withExtraInfo: extraInfo) ?? 0
-//    }
+    func auth(url: String, key: String){
+        YTCommonXMagic.TELicenseCheck.setTELicense(url, key: key) { authResult, errorMsg in
+            print("Effect Auth result: \(authResult)  \(errorMsg)")
+        }
+    }
+    
+    
+    @discardableResult
+    func configProperty(type propertyType: String, name propertyName: String, data propertyValue: String, extraInfo: Any?) -> Int {
+        return Int(self.beautyKit?.configProperty(withType: propertyType, withName: propertyName, withData: propertyValue, withExtraInfo: extraInfo) ?? 0)
+    }
     
 //    func processFrame(frame: CVPixelBuffer) -> CVPixelBuffer {
 //        let input = YTProcessInput()
