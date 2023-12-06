@@ -9,7 +9,7 @@ import UIKit
 import XMagic
 import YTCommonXMagic
 
-class XmagicManager {
+class XmagicManager: NSObject, YTSDKEventListener, YTSDKLogListener {
     
     private var beautyKit: XMagic?
     
@@ -17,7 +17,7 @@ class XmagicManager {
         let assetsDict: [String: Any] = ["core_name": "LightCore.bundle",
                                          "root_path": Bundle.main.bundlePath]
         self.beautyKit = XMagic(renderSize: renderSize, assetsDict: assetsDict)
-        //self.beautyKit?.registerLoggerListener(self, withDefaultLevel: YT_SDK_ERROR_LEVEL)
+        self.beautyKit?.registerLoggerListener(self, withDefaultLevel: YtSDKLoggerLevel.YT_SDK_ERROR_LEVEL)
     }
     
     func destory() {
@@ -37,7 +37,8 @@ class XmagicManager {
     
     
     func processFrame(_ frame: CVPixelBuffer) -> CVPixelBuffer? {
-
+        
+        
         let input = YTProcessInput()
         input.pixelData = YTImagePixelData()
         input.pixelData?.data = frame
@@ -46,8 +47,22 @@ class XmagicManager {
         let output = self.beautyKit?.process(input, with: .topLeft, with: .cameraRotation0)
         
         input.pixelData = nil
+        
         return output?.pixelData?.data
+//        return output?.pixelData?.data
 
+    }
+
+    func onAIEvent(_ event: Any) {}
+
+    func onAssetEvent(_ event: Any) {}
+
+    func onTipsEvent(_ event: Any) {}
+
+    func onYTDataEvent(_ event: Any) {}
+
+    func onLog(_ loggerLevel: YtSDKLoggerLevel, withInfo logInfo: String) {
+        NSLog("[\(loggerLevel)]-\(logInfo)")
     }
     
 }

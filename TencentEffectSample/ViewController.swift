@@ -125,14 +125,14 @@ class ViewController: UIViewController {
         self.view.addSubview(localView)
 
         joinButton = UIButton(type: .system)
-        joinButton.frame = CGRect(x: 10, y: 0, width: 100, height: 50)
+        joinButton.frame = CGRect(x: 10, y: 10, width: 100, height: 50)
         joinButton.setTitle("Join", for: .normal)
         joinButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         joinButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(joinButton)
 
         effectButton = UIButton(type: .system)
-        effectButton.frame = CGRect(x: 100, y: 0, width: 100, height: 50)
+        effectButton.frame = CGRect(x: 100, y: 10, width: 100, height: 50)
         effectButton.setTitle("EffectOn", for: .normal)
         effectButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         effectButton.addTarget(self, action: #selector(effectButtonAction), for: .touchUpInside)
@@ -155,7 +155,10 @@ class ViewController: UIViewController {
     @objc func effectButtonAction(sender: UIButton!) {
         if !effected {
             agoraEngine.setVideoFrameDelegate(self)
+
             self.videoFilter.configProperty(type: "beauty", name: "beauty.enlarge.eye", data: "100", extraInfo: nil)
+
+//            self.videoFilter.configProperty(type: "beauty", name: "beauty.lips", data: "30", extraInfo: ["beauty.lips.lipsMask": "images/beauty/lips_fuguhong.png", "beauty.lips.lipsType": 2])
             effected = true
 
         } else {
@@ -218,7 +221,7 @@ extension ViewController: AgoraRtcEngineDelegate {
 extension ViewController: AgoraVideoFrameDelegate {
 
     func onCapture(_ videoFrame: AgoraOutputVideoFrame, sourceType: AgoraVideoSourceType) -> Bool {
-
+        
         if videoFrame.pixelBuffer != nil {
             let pixelBuffer = self.videoFilter.processFrame(videoFrame.pixelBuffer!)
             videoFrame.pixelBuffer = pixelBuffer
@@ -236,7 +239,8 @@ extension ViewController: AgoraVideoFrameDelegate {
     }
 
     func getVideoFormatPreference() -> AgoraVideoFormat {
-        return AgoraVideoFormat.I420
+        return AgoraVideoFormat.cvPixelI420
+        //return AgoraVideoFormat.I420
     }
 
     func getObservedFramePosition() -> AgoraVideoFramePosition {
