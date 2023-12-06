@@ -141,6 +141,7 @@
 		A7162E852B18228E00CFCE84 /* TencentEffectSample */ = {
 			isa = PBXGroup;
 			children = (
+				A7579EB32B1D7553002A33E6 /* Xmagic */,
 				A7162E862B18228E00CFCE84 /* AppDelegate.swift */,
 				A7162E882B18228E00CFCE84 /* SceneDelegate.swift */,
 				A7162E8A2B18228E00CFCE84 /* ViewController.swift */,
@@ -148,7 +149,6 @@
 				A7162E8F2B18229000CFCE84 /* Assets.xcassets */,
 				A7162E912B18229000CFCE84 /* LaunchScreen.storyboard */,
 				A7162E942B18229000CFCE84 /* Info.plist */,
-				A7162EF52B18579600CFCE84 /* XmagicManager.swift */,
 			);
 			path = TencentEffectSample;
 			sourceTree = "<group>";
@@ -168,6 +168,14 @@
 				A7162EA92B18229000CFCE84 /* TencentEffectSampleUITestsLaunchTests.swift */,
 			);
 			path = TencentEffectSampleUITests;
+			sourceTree = "<group>";
+		};
+		A7579EB32B1D7553002A33E6 /* Xmagic */ = {
+			isa = PBXGroup;
+			children = (
+				A7162EF52B18579600CFCE84 /* XmagicManager.swift */,
+			);
+			path = Xmagic;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

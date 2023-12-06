@@ -10,11 +10,13 @@ import AVFoundation
 import AgoraRtcKit
 
 
+
 class ViewController: UIViewController {
 
     let appID = ""
     let xMagicLicenceUrl = ""
     let xMagicLicenceKey = ""
+
     var agoraEngine: AgoraRtcEngineKit!
     var userRole: AgoraClientRole = .broadcaster
     var token = ""
@@ -22,20 +24,23 @@ class ViewController: UIViewController {
 
     var videoFilter: XmagicManager!
 
-    
-    
-    // The video feed for the local user is displayed here
     var localView: UIView!
-    // The video feed for the remote user is displayed here
     var remoteView: UIView!
-    // Click to join or leave a call
     var joinButton: UIButton!
+    var effectButton: UIButton!
     
-    // Track if the local user is in a call
     var joined: Bool = false {
         didSet {
             DispatchQueue.main.async {
                 self.joinButton.setTitle( self.joined ? "Leave" : "Join", for: .normal)
+            }
+        }
+    }
+    
+    var effected: Bool = false {
+        didSet {
+            DispatchQueue.main.async {
+                self.effectButton.setTitle( self.effected ? "EffectOff" : "EffectOn", for: .normal)
             }
         }
     }
@@ -58,7 +63,6 @@ class ViewController: UIViewController {
 
         let option = AgoraRtcChannelMediaOptions()
 
-        // Set the client role option as broadcaster or audience.
         if self.userRole == .broadcaster {
             option.clientRoleType = .broadcaster
             setupLocalVideo()
@@ -66,15 +70,13 @@ class ViewController: UIViewController {
             option.clientRoleType = .audience
         }
 
-        // For a video call scenario, set the channel profile as communication.
-        option.channelProfile = .communication
+        option.channelProfile = .liveBroadcasting
 
-        // Join the channel with a temp token. Pass in your token and channel name here
         let result = agoraEngine.joinChannel(
             byToken: token, channelId: channelName, uid: 0, mediaOptions: option,
             joinSuccess: { (channel, uid, elapsed) in }
         )
-            // Check if joining the channel was successful and set joined Bool accordingly
+
         if result == 0 {
             joined = true
             showMessage(title: "Success", text: "Successfully joined the channel as \(self.userRole)")
@@ -84,7 +86,6 @@ class ViewController: UIViewController {
     func leaveChannel() {
         agoraEngine.stopPreview()
         let result = agoraEngine.leaveChannel(nil)
-        // Check if leaving the channel was successful and set joined Bool accordingly
         if result == 0 { joined = false }
     }
 
@@ -97,46 +98,46 @@ class ViewController: UIViewController {
     
     func initializeAgoraEngine() {
         let config = AgoraRtcEngineConfig()
-        // Pass in your App ID here.
         config.appId = appID
-        // Use AgoraRtcEngineDelegate for the following delegate parameter.
         agoraEngine = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
     }
 
     func setupLocalVideo() {
-        // Enable the video module
+
         agoraEngine.enableVideo()
-        agoraEngine.setVideoFrameDelegate(self)
-                
-        // Start the local video preview
         agoraEngine.startPreview()
+
         let videoCanvas = AgoraRtcVideoCanvas()
         videoCanvas.uid = 0
         videoCanvas.renderMode = .hidden
         videoCanvas.view = localView
-        // Set the local video view
         agoraEngine.setupLocalVideo(videoCanvas)
 
         self.videoFilter.buildBeautySDK(renderSize: CGSize(width: 350, height: 330))
-        self.videoFilter.configProperty(type: "beauty", name: "beauty.enlarge.eye", data: "100", extraInfo: nil)
-
 
     }
 
     func initViews() {
-        // Initializes the remote video view. This view displays video when a remote host joins the channel.
         remoteView = UIView()
         self.view.addSubview(remoteView)
-        // Initializes the local video window. This view displays video when the local user is a host.
+
         localView = UIView()
         self.view.addSubview(localView)
-        //  Button to join or leave a channel
+
         joinButton = UIButton(type: .system)
         joinButton.frame = CGRect(x: 10, y: 0, width: 100, height: 50)
         joinButton.setTitle("Join", for: .normal)
-        joinButton.titleLabel?.font = UIFont.systemFont(ofSize: 36)
+        joinButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         joinButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(joinButton)
+
+        effectButton = UIButton(type: .system)
+        effectButton.frame = CGRect(x: 100, y: 0, width: 100, height: 50)
+        effectButton.setTitle("EffectOn", for: .normal)
+        effectButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        effectButton.addTarget(self, action: #selector(effectButtonAction), for: .touchUpInside)
+        self.view.addSubview(effectButton)
+
     }
     
     @objc func buttonAction(sender: UIButton!) {
@@ -151,9 +152,21 @@ class ViewController: UIViewController {
         }
     }
     
+    @objc func effectButtonAction(sender: UIButton!) {
+        if !effected {
+            agoraEngine.setVideoFrameDelegate(self)
+            self.videoFilter.configProperty(type: "beauty", name: "beauty.enlarge.eye", data: "100", extraInfo: nil)
+            effected = true
+
+        } else {
+            agoraEngine.setVideoFrameDelegate(nil)
+            effected = false
+        }
+    }
+    
+
     func checkForPermissions() async -> Bool {
         var hasPermissions = await self.avAuthorization(mediaType: .video)
-        // Break out, because camera permissions have been denied or restricted.
         if !hasPermissions { return false }
         hasPermissions = await self.avAuthorization(mediaType: .audio)
         return hasPermissions
@@ -189,12 +202,10 @@ class ViewController: UIViewController {
         DispatchQueue.global(qos: .userInitiated).async {AgoraRtcEngineKit.destroy()}
     }
 
-    
 }
 
 
 extension ViewController: AgoraRtcEngineDelegate {
-    // Callback called when a new host joins the channel
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         let videoCanvas = AgoraRtcVideoCanvas()
         videoCanvas.uid = uid
@@ -207,32 +218,28 @@ extension ViewController: AgoraRtcEngineDelegate {
 extension ViewController: AgoraVideoFrameDelegate {
 
     func onCapture(_ videoFrame: AgoraOutputVideoFrame, sourceType: AgoraVideoSourceType) -> Bool {
-        //<#code#>
-        //videoFrame.pixelBuffer
+
+        if videoFrame.pixelBuffer != nil {
+            let pixelBuffer = self.videoFilter.processFrame(videoFrame.pixelBuffer!)
+            videoFrame.pixelBuffer = pixelBuffer
+        }
         return true
     }
 
     // Occurs each time the SDK receives a video frame sent by the remote user
     func onRenderVideoFrame(_ videoFrame: AgoraOutputVideoFrame, uid: UInt, channelId: String) -> Bool {
-        // Choose whether to ignore the current video frame if the post-processing fails
         return false
     }
 
-    // Indicate the video frame mode of the observer
     func getVideoFrameProcessMode() -> AgoraVideoFrameProcessMode {
-        // The process mode of the video frame: readOnly, readWrite
         return AgoraVideoFrameProcessMode.readWrite
     }
 
-    // Sets the video frame type preference
     func getVideoFormatPreference() -> AgoraVideoFormat {
-        // Video frame format: I420, BGRA, NV21, RGBA, NV12, CVPixel, I422, Default
         return AgoraVideoFormat.I420
     }
 
-    // Sets the frame position for the video observer
     func getObservedFramePosition() -> AgoraVideoFramePosition {
-        // Frame position: postCapture, preRenderer, preEncoder
         return AgoraVideoFramePosition.postCapture
     }
 }

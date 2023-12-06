@@ -29,40 +29,25 @@ class XmagicManager {
             print("Effect Auth result: \(authResult)  \(errorMsg)")
         }
     }
-    
-    
+        
     @discardableResult
     func configProperty(type propertyType: String, name propertyName: String, data propertyValue: String, extraInfo: Any?) -> Int {
         return Int(self.beautyKit?.configProperty(withType: propertyType, withName: propertyName, withData: propertyValue, withExtraInfo: extraInfo) ?? 0)
     }
     
-//    func processFrame(frame: CVPixelBuffer) -> CVPixelBuffer {
-//        let input = YTProcessInput()
-//        input.pixelData = YTImagePixelData()
-//        input.pixelData?.data = frame
-//        input.dataType = .kYTImagePixelData
-//        let output = self.beautyKit?.process(input, withOrigin: .ytLightImageOriginTopLeft, withOrientation: .ytLightCameraRotation0)
-//        input.pixelData = nil
-//        return output?.pixelData?.data ?? frame
-//    }
     
-    func onAIEvent(_ event: Any) {
-        // Implementation for onAIEvent if needed
+    func processFrame(_ frame: CVPixelBuffer) -> CVPixelBuffer? {
+
+        let input = YTProcessInput()
+        input.pixelData = YTImagePixelData()
+        input.pixelData?.data = frame
+        input.dataType = kYTImagePixelData
+        
+        let output = self.beautyKit?.process(input, with: .topLeft, with: .cameraRotation0)
+        
+        input.pixelData = nil
+        return output?.pixelData?.data
+
     }
     
-    func onAssetEvent(_ event: Any) {
-        // Implementation for onAssetEvent if needed
-    }
-    
-    func onTipsEvent(_ event: Any) {
-        // Implementation for onTipsEvent if needed
-    }
-    
-    func onYTDataEvent(_ event: Any) {
-        // Implementation for onYTDataEvent if needed
-    }
-    
-    func onLog(_ loggerLevel: YtSDKLoggerLevel, withInfo logInfo: String) {
-        print("[\(loggerLevel)]-\(logInfo)")
-    }
 }
