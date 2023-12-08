@@ -40,7 +40,7 @@ class XmagicManager: NSObject, YTSDKEventListener, YTSDKLogListener {
     
     
     func processFrame(_ frame: CVPixelBuffer, width:UInt32, height:UInt32) -> CVPixelBuffer? {
-        
+
         if self.beautyKit == nil{
             widthF = width;
             heightF = height;

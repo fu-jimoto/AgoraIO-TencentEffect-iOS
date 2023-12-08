@@ -155,15 +155,15 @@ class ViewController: UIViewController {
     
     @objc func effectButtonAction(sender: UIButton!) {
         if !effected {
-
             self.videoFilter.configProperty(type: "beauty", name: "basicV7.enlargeEye", data: "100", extraInfo: nil)
-//            self.videoFilter.configProperty(type: "beauty", name: "smooth.smooth", data: "100", extraInfo: nil)
-
-//            self.videoFilter.configProperty(type: "beauty", name: "beauty.lips", data: "30", extraInfo: ["beauty.lips.lipsMask": "images/beauty/lips_fuguhong.png", "beauty.lips.lipsType": 2])
+            self.videoFilter.configProperty(type: "beauty", name: "smooth.smooth", data: "100", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "beauty.faceFeatureLipsLut", data: "100", extraInfo: nil)
             effected = true
 
         } else {
-            self.videoFilter.configProperty(type: "", name: "", data: "", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "basicV7.enlargeEye", data: "0", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "smooth.smooth", data: "0", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "beauty.faceFeatureLipsLut", data: "0", extraInfo: nil)
             effected = false
         }
     }
