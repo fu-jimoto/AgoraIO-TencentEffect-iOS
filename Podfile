@@ -5,7 +5,7 @@ target 'TencentEffectSample' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  pod 'XMagic'
+  pod 'TencentEffect_S1-04'
   pod 'AgoraRtcEngine_iOS', '4.2.6'
 
   # Pods for TencentEffectSample

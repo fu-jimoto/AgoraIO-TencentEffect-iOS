@@ -12,11 +12,14 @@ import YTCommonXMagic
 class XmagicManager: NSObject, YTSDKEventListener, YTSDKLogListener {
     
     private var beautyKit: XMagic?
+    var heightF: UInt32?
+    var widthF: UInt32?
     
-    func buildBeautySDK(renderSize: CGSize) {
+    func buildBeautySDK(width:UInt32,height:UInt32) {
         let assetsDict: [String: Any] = ["core_name": "LightCore.bundle",
                                          "root_path": Bundle.main.bundlePath]
-        self.beautyKit = XMagic(renderSize: renderSize, assetsDict: assetsDict)
+        let sise = CGSize(width: CGFloat(width), height: CGFloat(height))
+        self.beautyKit = XMagic.init(renderSize: sise, assetsDict: assetsDict)
         self.beautyKit?.registerLoggerListener(self, withDefaultLevel: YtSDKLoggerLevel.YT_SDK_ERROR_LEVEL)
     }
     
@@ -36,20 +39,27 @@ class XmagicManager: NSObject, YTSDKEventListener, YTSDKLogListener {
     }
     
     
-    func processFrame(_ frame: CVPixelBuffer) -> CVPixelBuffer? {
+    func processFrame(_ frame: CVPixelBuffer, width:UInt32, height:UInt32) -> CVPixelBuffer? {
         
-        
+        if self.beautyKit == nil{
+            widthF = width;
+            heightF = height;
+            buildBeautySDK(width: width, height: height)
+        }
+        if self.beautyKit != nil && (heightF != height || widthF != width) {
+            widthF = width
+            heightF = height
+            let rendersize = CGSize(width: CGFloat(width), height: CGFloat(height))
+            self.beautyKit?.setRenderSize(rendersize)
+        }
         let input = YTProcessInput()
         input.pixelData = YTImagePixelData()
         input.pixelData?.data = frame
         input.dataType = kYTImagePixelData
         
         let output = self.beautyKit?.process(input, with: .topLeft, with: .cameraRotation0)
-        
-        input.pixelData = nil
-        
+                
         return output?.pixelData?.data
-//        return output?.pixelData?.data
 
     }
 

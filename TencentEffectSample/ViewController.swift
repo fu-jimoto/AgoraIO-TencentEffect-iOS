@@ -17,7 +17,9 @@ class ViewController: UIViewController {
     let xMagicLicenceUrl = ""
     let xMagicLicenceKey = ""
 
+
     var agoraEngine: AgoraRtcEngineKit!
+    var config:AgoraRtcEngineConfig!
     var userRole: AgoraClientRole = .broadcaster
     var token = ""
     var channelName = "sample"
@@ -97,9 +99,10 @@ class ViewController: UIViewController {
     }
     
     func initializeAgoraEngine() {
-        let config = AgoraRtcEngineConfig()
+        config = AgoraRtcEngineConfig()
         config.appId = appID
         agoraEngine = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
+        agoraEngine.setVideoFrameDelegate(self)
     }
 
     func setupLocalVideo() {
@@ -113,8 +116,6 @@ class ViewController: UIViewController {
         videoCanvas.view = localView
         agoraEngine.setupLocalVideo(videoCanvas)
 
-        self.videoFilter.buildBeautySDK(renderSize: CGSize(width: 350, height: 330))
-
     }
 
     func initViews() {
@@ -125,14 +126,14 @@ class ViewController: UIViewController {
         self.view.addSubview(localView)
 
         joinButton = UIButton(type: .system)
-        joinButton.frame = CGRect(x: 10, y: 10, width: 100, height: 50)
+        joinButton.frame = CGRect(x: 10, y: 50, width: 100, height: 50)
         joinButton.setTitle("Join", for: .normal)
         joinButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         joinButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(joinButton)
 
         effectButton = UIButton(type: .system)
-        effectButton.frame = CGRect(x: 100, y: 10, width: 100, height: 50)
+        effectButton.frame = CGRect(x: 100, y: 50, width: 100, height: 50)
         effectButton.setTitle("EffectOn", for: .normal)
         effectButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         effectButton.addTarget(self, action: #selector(effectButtonAction), for: .touchUpInside)
@@ -154,15 +155,15 @@ class ViewController: UIViewController {
     
     @objc func effectButtonAction(sender: UIButton!) {
         if !effected {
-            agoraEngine.setVideoFrameDelegate(self)
 
-            self.videoFilter.configProperty(type: "beauty", name: "beauty.enlarge.eye", data: "100", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "basicV7.enlargeEye", data: "100", extraInfo: nil)
+//            self.videoFilter.configProperty(type: "beauty", name: "smooth.smooth", data: "100", extraInfo: nil)
 
 //            self.videoFilter.configProperty(type: "beauty", name: "beauty.lips", data: "30", extraInfo: ["beauty.lips.lipsMask": "images/beauty/lips_fuguhong.png", "beauty.lips.lipsType": 2])
             effected = true
 
         } else {
-            agoraEngine.setVideoFrameDelegate(nil)
+            self.videoFilter.configProperty(type: "", name: "", data: "", extraInfo: nil)
             effected = false
         }
     }
@@ -221,15 +222,13 @@ extension ViewController: AgoraRtcEngineDelegate {
 extension ViewController: AgoraVideoFrameDelegate {
 
     func onCapture(_ videoFrame: AgoraOutputVideoFrame, sourceType: AgoraVideoSourceType) -> Bool {
-        
         if videoFrame.pixelBuffer != nil {
-            let pixelBuffer = self.videoFilter.processFrame(videoFrame.pixelBuffer!)
+            let pixelBuffer = self.videoFilter.processFrame(videoFrame.pixelBuffer!,width: UInt32(videoFrame.width),height: UInt32(videoFrame.height))
             videoFrame.pixelBuffer = pixelBuffer
         }
         return true
     }
 
-    // Occurs each time the SDK receives a video frame sent by the remote user
     func onRenderVideoFrame(_ videoFrame: AgoraOutputVideoFrame, uid: UInt, channelId: String) -> Bool {
         return false
     }
@@ -239,8 +238,7 @@ extension ViewController: AgoraVideoFrameDelegate {
     }
 
     func getVideoFormatPreference() -> AgoraVideoFormat {
-        return AgoraVideoFormat.cvPixelI420
-        //return AgoraVideoFormat.I420
+        return AgoraVideoFormat.cvPixelNV12
     }
 
     func getObservedFramePosition() -> AgoraVideoFramePosition {

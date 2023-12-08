@@ -28,21 +28,23 @@ PODS:
   - AgoraRtcEngine_iOS/VideoCodecEnc (4.2.6)
   - AgoraRtcEngine_iOS/VirtualBackground (4.2.6)
   - AgoraRtcEngine_iOS/VQA (4.2.6)
-  - XMagic (3.0.0.4)
+  - TencentEffect_S1-04 (3.3.0.1):
+    - TencentEffect_S1-04/Default (= 3.3.0.1)
+  - TencentEffect_S1-04/Default (3.3.0.1)
 
 DEPENDENCIES:
   - AgoraRtcEngine_iOS (= 4.2.6)
-  - XMagic
+  - TencentEffect_S1-04
 
 SPEC REPOS:
   trunk:
     - AgoraRtcEngine_iOS
-    - XMagic
+    - TencentEffect_S1-04
 
 SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: ac647332ad8f86d79cf810601c9e62b28c3a4de0
-  XMagic: a7be3c2547768561ae9ca2fa20e5bf2575154f64
+  TencentEffect_S1-04: 63b3d91d3228180f91ad6a8339793d3a21ce51d6
 
-PODFILE CHECKSUM: 59dc6684e67c877fe6f01a9af36c62f47bfa6570
+PODFILE CHECKSUM: 2bd0606e22abbb7c50d0fbf5c533692d274a3908
 
 COCOAPODS: 1.11.3
