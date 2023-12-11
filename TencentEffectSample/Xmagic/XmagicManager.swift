@@ -62,6 +62,7 @@ class XmagicManager: NSObject, YTSDKEventListener, YTSDKLogListener {
         return output?.pixelData?.data
 
     }
+    
 
     func onAIEvent(_ event: Any) {}
 

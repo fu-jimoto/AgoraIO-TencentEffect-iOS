@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     let xMagicLicenceKey = ""
 
 
+
     var agoraEngine: AgoraRtcEngineKit!
     var config:AgoraRtcEngineConfig!
     var userRole: AgoraClientRole = .broadcaster
@@ -55,6 +56,7 @@ class ViewController: UIViewController {
         
         initViews()
         initializeAgoraEngine()
+
     }
     
     func joinChannel() async {
@@ -158,12 +160,21 @@ class ViewController: UIViewController {
             self.videoFilter.configProperty(type: "beauty", name: "basicV7.enlargeEye", data: "100", extraInfo: nil)
             self.videoFilter.configProperty(type: "beauty", name: "smooth.smooth", data: "100", extraInfo: nil)
             self.videoFilter.configProperty(type: "beauty", name: "beauty.faceFeatureLipsLut", data: "100", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "basicV7.mouthWidth", data: "100", extraInfo: nil)
+            self.videoFilter.configProperty(type: "lut", name: "lut.bundle/n_baixi.png", data: "100", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "beauty.faceFeatureSoftlight", data: "100", extraInfo: ["beauty.softLight.softLightMask":"images/beauty/liti_junlang.png"])
+
+
             effected = true
 
         } else {
             self.videoFilter.configProperty(type: "beauty", name: "basicV7.enlargeEye", data: "0", extraInfo: nil)
             self.videoFilter.configProperty(type: "beauty", name: "smooth.smooth", data: "0", extraInfo: nil)
             self.videoFilter.configProperty(type: "beauty", name: "beauty.faceFeatureLipsLut", data: "0", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "basicV7.mouthWidth", data: "0", extraInfo: nil)
+            self.videoFilter.configProperty(type: "lut", name: "lut.bundle/n_baixi.png", data: "0", extraInfo: nil)
+            self.videoFilter.configProperty(type: "beauty", name: "beauty.faceFeatureSoftlight", data: "0", extraInfo: ["beauty.softLight.softLightMask":"images/beauty/liti_junlang.png"])
+
             effected = false
         }
     }
@@ -203,7 +214,10 @@ class ViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         leaveChannel()
-        DispatchQueue.global(qos: .userInitiated).async {AgoraRtcEngineKit.destroy()}
+        DispatchQueue.global(qos: .userInitiated).async {
+            AgoraRtcEngineKit.destroy()
+            self.videoFilter.destory()
+        }
     }
 
 }
